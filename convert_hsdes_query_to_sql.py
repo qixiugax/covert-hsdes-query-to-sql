@@ -3,6 +3,7 @@ import urllib3
 import urllib
 import getopt
 import sys
+import re
 from requests_kerberos import HTTPKerberosAuth
 from lxml import etree
 from typing import Text
@@ -104,7 +105,7 @@ def convert_to_sql(hsd_id=None, model=None):
         value = with_xpath(xml_data, '//x:{node}/@{attr}'.
                            format(node=node, attr=attr), namespaces)
         xml_xpath_value[node] = update_field(node, value, model)
-    print(xml_xpath_value)
+    # print(xml_xpath_value)
 
     if xml_xpath_value['WhereClause'] == ['MATCH ALL']:
         where_clause = ' AND '.join(xml_xpath_value['Criteria'])
@@ -119,7 +120,7 @@ def convert_to_sql(hsd_id=None, model=None):
                  xml_xpath_value['FieldOperator'], xml_xpath_value['FieldValue']):
         t_li = list(t)
         where_clause = where_clause.replace(t_li.pop(0), ' '.join(t_li), 1)
-        print(where_clause)
+        # print(where_clause)
 
     sql = None
     if model == 'dps':
@@ -130,10 +131,9 @@ def convert_to_sql(hsd_id=None, model=None):
             sql = sql.format(fields=','.join(xml_xpath_value['DisplayField']),
                              subject=xml_xpath_value['Subject'][0],
                              where_clause=where_clause).replace(k, v)
-        import re
+
         like_letters = re.findall('like [\(\']+(.*?)[\)\']+', sql)
         for letters in like_letters:
-            print(letters)
             sql = sql.replace(letters, '%{}%'.format(letters))
     elif model == 'hsdes':
         sql = """
