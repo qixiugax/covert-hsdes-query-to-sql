@@ -1,0 +1,12 @@
+*.pyc
+logs/
+*.log
+*.log.*
+*.bak
+*.swp
+*.out
+*.csv
+creds.yaml
+.idea/
+venv/
+*.sample
