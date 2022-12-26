@@ -116,10 +116,10 @@ def convert_to_sql(hsd_id=None, model=None):
     else:
         return
 
-    for t in zip(xml_xpath_value['Criteria'], xml_xpath_value['CriteriaField'],
-                 xml_xpath_value['FieldOperator'], xml_xpath_value['FieldValue']):
+    for t in zip(reversed(xml_xpath_value['Criteria']), reversed(xml_xpath_value['CriteriaField']),
+                 reversed(xml_xpath_value['FieldOperator']), reversed(xml_xpath_value['FieldValue'])):
         t_li = list(t)
-        where_clause = where_clause.replace(t_li.pop(0), ' '.join(t_li), 1)
+        where_clause = where_clause.replace(t_li.pop(0), ' '.join(t_li))
         # print(where_clause)
 
     sql = None
